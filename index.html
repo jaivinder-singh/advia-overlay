@@ -182,6 +182,46 @@
             localStorage.setItem('chatOverlayOpen', false);
         }
 
+
+
+       function sendConversationAttribute(key, value) {
+	let data = {};
+	data["actionType"] = "ameliaConversationAttributes";
+	let entry = {};
+	entry[key] = value;
+	data["actionData"] = entry;
+	console.log("Send data: " + JSON.stringify(data));
+	sendMessage(data);
+	}
+		  
+		  
+	var isAppStarted = false;
+	     window.addEventListener("message", (res) => {
+		console.log("Inside listner " + res);
+		if (
+		  res?.data?.notificationType === "conversationNew" ||
+		  res?.data?.notificationType === "conversationJoined"
+		) {
+		  console.log("Inside if ");
+		  isAppStarted = true;
+		}
+	     });
+		  
+		  
+	 function sendMessage(jsonData) {
+	        
+	
+	        console.log("Inside send message new ");
+	        if (isAppStarted) {
+	          const iframe = document.getElementById("receiver");
+	          console.log("Inside if send message ");
+	          iframe?.contentWindow?.postMessage(
+	            jsonData,
+	            ameliaBaseUrl
+	          );
+	        }
+	      }
+
         function toggleChatOverlay() {
             /**
              * Toggles opening and closing of the chatOverlay
